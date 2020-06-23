@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+
+# Others
+.waf-*
+.waf3-*
+build
+.lock-waf*
+*.pyc
+.vscode
+.DS_Store
+__pycache__
+waf
