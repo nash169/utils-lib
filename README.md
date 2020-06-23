@@ -1,2 +1,2 @@
-# file-manager
-Repository containing a small wrapper around Corrade to handle reading/writing files.
+# Utils CPP
+Repository containing some utility frequnetly used inside different libraries' examples.
