@@ -47,7 +47,7 @@ def configure(cfg):
 
 def build(bld):
     # Library name
-    bld.get_env()["libname"] = "utilsCpp"
+    bld.get_env()["libname"] = "UtilsCpp"
 
     # Includes
     includes = []
