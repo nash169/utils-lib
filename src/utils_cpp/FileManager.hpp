@@ -7,9 +7,9 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace Corrade::Utility::Directory;
-
 
 namespace utils_cpp {
     class FileManager {
@@ -50,7 +50,7 @@ namespace utils_cpp {
             }
 
             _file << var << "\n"
-                    << std::endl;
+                  << std::endl;
 
             write(args...);
         }
@@ -78,7 +78,7 @@ namespace utils_cpp {
             }
 
             _file << var << "\n"
-                    << std::endl;
+                  << std::endl;
 
             append(args...);
         }
@@ -124,6 +124,5 @@ namespace utils_cpp {
         std::string _path, _name;
     };
 } // namespace utils_cpp
-
 
 #endif // UTILSCPP_FILEMANAGER_HPP
