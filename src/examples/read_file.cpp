@@ -1,4 +1,3 @@
-#include <iostream>
 #include <utils_cpp/UtilsCpp.hpp>
 
 using namespace utils_cpp;
