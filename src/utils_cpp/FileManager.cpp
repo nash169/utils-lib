@@ -1,6 +1,5 @@
 #include "utils_cpp/FileManager.hpp"
 
-
 namespace utils_cpp {
     FileManager::FileManager(const std::string& file)
     {
@@ -21,7 +20,7 @@ namespace utils_cpp {
         return _path;
     }
 
-    void FileManager::setFile(const std::string& file)
+    FileManager& FileManager::setFile(const std::string& file)
     {
         _path = path(file);
 
@@ -33,5 +32,7 @@ namespace utils_cpp {
         _name = filename(file);
 
         _open = false;
+
+        return *this;
     }
 } // namespace utils_cpp
