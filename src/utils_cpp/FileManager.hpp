@@ -26,7 +26,7 @@ namespace utils_cpp {
         std::string filePath() const;
 
         // Set file & path
-        void setFile(const std::string& file);
+        FileManager& setFile(const std::string& file);
 
         // Write file
         template <typename VarType>
@@ -83,9 +83,8 @@ namespace utils_cpp {
             append(args...);
         }
 
-        // Read file
         template <typename VarType>
-        VarType read()
+        VarType read(const std::string& key = "", size_t ignore = 0)
         {
             if (!_open)
                 _file.open(join(_path, _name), std::ios::in);
@@ -93,15 +92,36 @@ namespace utils_cpp {
             std::string line;
             std::vector<double> values;
             uint rows = 0;
+            bool read;
+
+            if (!key.empty())
+                read = false;
+            else
+                read = true;
 
             while (std::getline(_file, line)) {
-                std::stringstream lineStream(line);
-                std::string cell;
-                while (std::getline(lineStream, cell, ' ')) {
-                    if (!cell.empty())
-                        values.push_back(std::stod(cell));
+                if (!key.compare(line)) {
+                    read = true;
                 }
-                ++rows;
+
+                if (read && ignore == 0) {
+                    std::stringstream lineStream(line);
+                    std::string cell;
+                    while (std::getline(lineStream, cell, ' ')) {
+                        if (!cell.empty())
+                            values.push_back(std::stod(cell));
+                    }
+
+                    ++rows;
+                }
+                else if (read) {
+                    ignore--;
+                }
+
+                if (line.empty() && !values.empty()) {
+                    rows--;
+                    break;
+                }
             }
 
             _file.close();
@@ -110,13 +130,40 @@ namespace utils_cpp {
             return Eigen::Map<const Eigen::Matrix<typename VarType::Scalar, VarType::RowsAtCompileTime, VarType::ColsAtCompileTime, Eigen::RowMajor>>(values.data(), rows, values.size() / rows);
         }
 
-        template <typename VarType>
-        VarType read(const std::string& file)
-        {
-            setFile(file);
+        // Read file
+        // template <typename VarType>
+        // VarType read()
+        // {
+        //     if (!_open)
+        //         _file.open(join(_path, _name), std::ios::in);
 
-            return this->read<VarType>();
-        }
+        //     std::string line;
+        //     std::vector<double> values;
+        //     uint rows = 0;
+
+        //     while (std::getline(_file, line)) {
+        //         std::stringstream lineStream(line);
+        //         std::string cell;
+        //         while (std::getline(lineStream, cell, ' ')) {
+        //             if (!cell.empty())
+        //                 values.push_back(std::stod(cell));
+        //         }
+        //         ++rows;
+        //     }
+
+        //     _file.close();
+        //     _open = false;
+
+        //     return Eigen::Map<const Eigen::Matrix<typename VarType::Scalar, VarType::RowsAtCompileTime, VarType::ColsAtCompileTime, Eigen::RowMajor>>(values.data(), rows, values.size() / rows);
+        // }
+
+        // template <typename VarType>
+        // VarType read(const std::string& file)
+        // {
+        //     setFile(file);
+
+        //     return this->read<VarType>();
+        // }
 
     protected:
         bool _open;
