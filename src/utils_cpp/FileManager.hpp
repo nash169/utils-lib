@@ -84,7 +84,7 @@ namespace utils_cpp {
         }
 
         template <typename VarType>
-        VarType read(const std::string& key = "", size_t ignore = 0)
+        VarType read(const std::string& keyStart = "", size_t ignore = 0, const std::string& keyEnd = "")
         {
             if (!_open)
                 _file.open(join(_path, _name), std::ios::in);
@@ -94,15 +94,16 @@ namespace utils_cpp {
             uint rows = 0;
             bool read;
 
-            if (!key.empty())
+            if (!keyStart.empty())
                 read = false;
             else
                 read = true;
 
             while (std::getline(_file, line)) {
-                if (!key.compare(line)) {
+                if (!keyStart.compare(line))
                     read = true;
-                }
+                else if (!keyEnd.compare(line) && !values.empty())
+                    break;
 
                 if (read && ignore == 0) {
                     std::stringstream lineStream(line);
@@ -114,14 +115,8 @@ namespace utils_cpp {
 
                     ++rows;
                 }
-                else if (read) {
+                else if (read)
                     ignore--;
-                }
-
-                if (line.empty() && !values.empty()) {
-                    rows--;
-                    break;
-                }
             }
 
             _file.close();
