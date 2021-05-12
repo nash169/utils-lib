@@ -4,7 +4,6 @@
 #include <chrono>
 #include <iostream>
 
-
 namespace utils_cpp {
     class Timer {
     public:
@@ -30,13 +29,12 @@ namespace utils_cpp {
             double s = ms * 0.001;
 
             std::cout << duration << "us (" << ms << "ms)"
-                        << " - (" << s << "s)" << std::endl;
+                      << " - (" << s << "s)" << std::endl;
         }
 
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> _start_time;
     };
 } // namespace utils_cpp
-
 
 #endif // UTILSCPP_TIMER_HPP
