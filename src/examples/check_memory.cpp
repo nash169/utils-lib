@@ -1,5 +1,7 @@
 #include <utils_cpp/UtilsCpp.hpp>
 
+// Source: https://github.com/stulp/tutorials/blob/master/test.md
+
 int main(int argc, char const* argv[])
 {
     Eigen::MatrixXd a = Eigen::MatrixXd::Random(5, 5), b = Eigen::MatrixXd::Random(5, 5), c = Eigen::MatrixXd::Random(5, 5), prealloc;
