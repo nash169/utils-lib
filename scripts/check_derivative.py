@@ -7,7 +7,7 @@ import sys
 
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
-from utils import get_data
+from io_utils import get_data
 
 data = get_data("rsc/check_derivative.csv", "gradient")
 
