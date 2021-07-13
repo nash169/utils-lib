@@ -31,7 +31,7 @@ def configure(cfg):
     cfg.env.SUFFIX = "dylib" if cfg.env["DEST_OS"] == "darwin" else "so"
 
     # Load compiler configuration
-    cfg.load("compiler_cxx")
+    cfg.load("compiler_cxx clang_compilation_database")
 
     # Load tools configuration
     cfg.get_env()["requires"] += ["EIGEN", "CORRADE"]
@@ -79,7 +79,6 @@ def build(bld):
             target=bld.get_env()["libname"],
             includes=includes_path,
             uselib=bld.get_env()["libs"],
-            cxxxflags=bld.get_env()["CXXFLAGS"],
         )
     else:
         bld.stlib(
@@ -88,8 +87,6 @@ def build(bld):
             target=bld.get_env()["libname"],
             includes=includes_path,
             uselib=bld.get_env()["libs"],
-            use="BOOST",
-            cxxxflags=bld.get_env()["CXXFLAGS"],
         )
 
     # Build executables
