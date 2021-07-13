@@ -24,7 +24,8 @@ def check_utilscpp(ctx):
         path_check = [ctx.options.utilscpp_path]
 
     # utilscpp-lib includes
-    check_include(ctx, "UTILSCPP", ["utils_cpp"], ["UtilsCpp.hpp"], path_check)
+    check_include(ctx, "UTILSCPP", [""], [
+                  "utils_cpp/UtilsCpp.hpp"], path_check)
 
     # utilscpp-lib libs
     check_lib(ctx, "UTILSCPP", "", ["libUtilsCpp"], path_check)
