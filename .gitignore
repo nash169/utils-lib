@@ -42,3 +42,4 @@ install/
 .DS_Store
 __pycache__
 waf
+.cache
