@@ -34,7 +34,8 @@
 # Others
 .waf-*
 .waf3-*
-build
+build/
+install/
 .lock-waf*
 *.pyc
 .vscode
