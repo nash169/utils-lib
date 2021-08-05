@@ -8,6 +8,9 @@ Repository containing some utility frequnetly used inside different libraries' e
 - File Manager
 - Timer
 
+### ToDo
+- add memory monitoring (https://www.youtube.com/watch?v=sLlGEUO_EGE&t=239s and https://en.cppreference.com/w/cpp/types/alignment_of)
+
 ### Dependencies
 This library depends on Eigen for loading files into Eigen matrices. For various utilities the library depends on Corrade utility library.
 ```sh
