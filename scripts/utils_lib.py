@@ -8,7 +8,7 @@ from utils import check_include, check_lib
 def options(opt):
     # Options
     opt.add_option(
-        "--utilscpp-path", type="string", help="path to utilscpp-lib", dest="utilscpp_path",
+        "--utilslib-path", type="string", help="path to utilslib-lib", dest="utilslib_path",
     )
 
     # Required package options
@@ -16,18 +16,18 @@ def options(opt):
 
 
 @conf
-def check_utilscpp(ctx):
+def check_utilslib(ctx):
     # Set the search path
-    if ctx.options.utilscpp_path is None:
+    if ctx.options.utilslib_path is None:
         path_check = ["/usr/local", "/usr"]
     else:
-        path_check = [ctx.options.utilscpp_path]
+        path_check = [ctx.options.utilslib_path]
 
-    # utilscpp-lib includes
+    # utilslib-lib includes
     check_include(ctx, "UTILSLIB", [""], [
                   "utils_lib/Utils.hpp"], path_check)
 
-    # utilscpp-lib libs
+    # utilslib-lib libs
     check_lib(ctx, "UTILSLIB", "", ["libUtils"], path_check)
 
     if ctx.env.LIB_UTILSLIB or ctx.env.STLIB_UTILSLIB:
@@ -46,4 +46,4 @@ def check_utilscpp(ctx):
 
 def configure(cfg):
     if not cfg.env.LIB_UTILSLIB and not cfg.env.STLIB_UTILSLIB:
-        cfg.check_utilscpp()
+        cfg.check_utilslib()
