@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <utils_cpp/UtilsCpp.hpp>
+#include <utils_lib/CheckMalloc.hpp>
 #include <vector>
 
 struct Object {

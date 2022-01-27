@@ -1,6 +1,6 @@
-#include "utils_cpp/FileManager.hpp"
+#include "utils_lib/FileManager.hpp"
 
-namespace utils_cpp {
+namespace utils_lib {
     FileManager::FileManager(const std::string& file)
     {
         setFile(file);
@@ -35,4 +35,4 @@ namespace utils_cpp {
 
         return *this;
     }
-} // namespace utils_cpp
+} // namespace utils_lib

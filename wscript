@@ -6,7 +6,7 @@ import os.path as osp
 import fnmatch
 
 VERSION = "1.0.0"
-APPNAME = "utils-cpp"
+APPNAME = "utils-lib"
 
 srcdir = "."
 blddir = "build"
@@ -49,7 +49,7 @@ def configure(cfg):
 
 def build(bld):
     # Library name
-    bld.get_env()["libname"] = "UtilsCpp"
+    bld.get_env()["libname"] = "Utils"
 
     # Includes
     includes = []
@@ -63,7 +63,7 @@ def build(bld):
 
     # Sources
     sources = []
-    sources_path = "src/utils_cpp"
+    sources_path = "src/utils_lib"
     for root, _, filenames in os.walk(
         osp.join(bld.path.abspath(), sources_path)
     ):
@@ -111,5 +111,5 @@ def build(bld):
         )
 
     # Install tools
-    bld.install_files("${PREFIX}/share/waf", "scripts/utils_cpp.py")
+    bld.install_files("${PREFIX}/share/waf", "scripts/utils_lib.py")
     bld.install_files("${PREFIX}/share/waf", "waf_tools/utils.py")

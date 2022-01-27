@@ -1,8 +1,10 @@
 #include <Eigen/Core>
 #include <iostream>
-#include <utils_cpp/UtilsCpp.hpp>
 
-using namespace utils_cpp;
+#include <utils_lib/DerivativeChecker.hpp>
+#include <utils_lib/FileManager.hpp>
+
+using namespace utils_lib;
 
 template <int size>
 struct Function {

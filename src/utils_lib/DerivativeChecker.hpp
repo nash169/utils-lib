@@ -1,10 +1,10 @@
-#ifndef UTILS_CPP_GRADIENT_CHECKER_HPP
-#define UTILS_CPP_GRADIENT_CHECKER_HPP
+#ifndef utils_lib_GRADIENT_CHECKER_HPP
+#define utils_lib_GRADIENT_CHECKER_HPP
 
 #include <Eigen/Core>
 #include <iostream>
 
-namespace utils_cpp {
+namespace utils_lib {
     class DerivativeChecker {
     public:
         DerivativeChecker(const size_t& dim = 1, const size_t& res = 51) : _dim(dim), _res(res) {}
@@ -187,6 +187,6 @@ namespace utils_cpp {
 
         Eigen::VectorXd _t, _G, _H;
     };
-} // namespace utils_cpp
+} // namespace utils_lib
 
-#endif // UTILS_CPP_GRADIENT_CHECKER_HPP
+#endif // utils_lib_GRADIENT_CHECKER_HPP

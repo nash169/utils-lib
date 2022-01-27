@@ -1,10 +1,10 @@
-#ifndef UTILSCPP_TIMER_HPP
-#define UTILSCPP_TIMER_HPP
+#ifndef UTILSLIB_TIMER_HPP
+#define UTILSLIB_TIMER_HPP
 
 #include <chrono>
 #include <iostream>
 
-namespace utils_cpp {
+namespace utils_lib {
     class Timer {
     public:
         Timer()
@@ -35,6 +35,6 @@ namespace utils_cpp {
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> _start_time;
     };
-} // namespace utils_cpp
+} // namespace utils_lib
 
-#endif // UTILSCPP_TIMER_HPP
+#endif // UTILSLIB_TIMER_HPP

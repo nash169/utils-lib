@@ -1,5 +1,5 @@
-#ifndef UTILSCPP_CHECK_MALLOC_HPP
-#define UTILSCPP_CHECK_MALLOC_HPP
+#ifndef UTILSLIB_CHECK_MALLOC_HPP
+#define UTILSLIB_CHECK_MALLOC_HPP
 
 #include <iostream>
 
@@ -41,4 +41,4 @@ static void PrintMemoryUsage()
     std::cout << "Memory Usage: " << s_AllocationMetrics.CurrentUsage() << " bytes\n";
 }
 
-#endif // UTILSCPP_CHECK_MALLOC_HPP
+#endif // UTILSLIB_CHECK_MALLOC_HPP

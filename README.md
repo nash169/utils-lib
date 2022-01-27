@@ -21,9 +21,9 @@ cd corrade && mkdir build && cmake .. && make && (sudo) make install
 ### Installation
 Clone the repository including the submodules
 ```sh
-git clone --recursive https://github.com/nash169/utils-cpp.git (git@github.com:nash169/utils-cpp.git)
+git clone --recursive https://github.com/nash169/utils-lib.git (git@github.com:nash169/utils-lib.git)
 ```
-**utils-cpp** relies on WAF compilation tool.
+**utils-lib** relies on WAF compilation tool.
 Arch provides an updated version of WAF exec in the standard repo
 ```sh
 sudo pacman -S waf
@@ -31,7 +31,7 @@ sudo pacman -S waf
 For other distros it is better to download the latest version from the official website and move the executable in the library repo
 ```sh
 wget 'https://waf.io/waf-2.0.21'
-mv waf-2.0.19waf-2.0.19 waf && mv waf /path/to/utils-cpp
+mv waf-2.0.19waf-2.0.19 waf && mv waf /path/to/utils-lib
 cd /path/to/kernel-lib
 chmod +x waf
 ```

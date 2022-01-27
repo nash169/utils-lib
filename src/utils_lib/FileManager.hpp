@@ -1,5 +1,5 @@
-#ifndef UTILSCPP_FILEMANAGER_HPP
-#define UTILSCPP_FILEMANAGER_HPP
+#ifndef UTILSLIB_FILEMANAGER_HPP
+#define UTILSLIB_FILEMANAGER_HPP
 
 #include <Corrade/Utility/Directory.h>
 #include <Eigen/Core>
@@ -11,7 +11,7 @@
 
 using namespace Corrade::Utility::Directory;
 
-namespace utils_cpp {
+namespace utils_lib {
     class FileManager {
     public:
         // Contructor
@@ -165,6 +165,6 @@ namespace utils_cpp {
         std::fstream _file;
         std::string _path, _name;
     };
-} // namespace utils_cpp
+} // namespace utils_lib
 
-#endif // UTILSCPP_FILEMANAGER_HPP
+#endif // UTILSLIB_FILEMANAGER_HPP
