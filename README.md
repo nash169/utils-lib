@@ -1,4 +1,4 @@
-# Utils CPP
+# Utils Library
 Repository containing some utility frequnetly used inside different libraries' examples.
 
 ### Authors/Maintainers
