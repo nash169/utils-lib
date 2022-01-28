@@ -111,5 +111,5 @@ def build(bld):
         )
 
     # Install tools
-    bld.install_files("${PREFIX}/share/waf", "scripts/utils_lib.py")
+    bld.install_files("${PREFIX}/share/waf", "scripts/utilslib.py")
     bld.install_files("${PREFIX}/share/waf", "waf_tools/utils.py")
