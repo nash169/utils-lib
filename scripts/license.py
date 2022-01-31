@@ -137,3 +137,7 @@ if __name__ == '__main__':
 
     # Insert license in the scripts
     insert('scripts')
+
+    # Insert license in the wscript
+    insert_header('wscript', '#', '', license, [
+                  '#!/usr/bin/env python', '# encoding: utf-8'])
