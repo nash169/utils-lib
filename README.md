@@ -1,5 +1,5 @@
 # Utils Library
-Repository containing some utility frequnetly used inside different libraries' examples.
+Repository containing some utility frequently used inside different libraries.
 
 ### Authors/Maintainers
 - Bernardo Fichera (bernardo.fichera@epfl.ch)
@@ -7,15 +7,24 @@ Repository containing some utility frequnetly used inside different libraries' e
 ### Available Utils
 - File Manager
 - Timer
+- Realtime checker
+- Derivative checker
 
 ### ToDo
-- add memory monitoring (https://www.youtube.com/watch?v=sLlGEUO_EGE&t=239s and https://en.cppreference.com/w/cpp/types/alignment_of)
+- add memory allocation monitoring (https://en.cppreference.com/w/cpp/types/alignment_of)
 
 ### Dependencies
-This library depends on Eigen for loading files into Eigen matrices. For various utilities the library depends on Corrade utility library.
+This library depends on **Eigen** linear algebra library to load data into *Eigen* vectors/matrices. For various utilities the library depends on **Corrade** utility library.
+
+*Corrade* installation:
 ```sh
 git clone https://github.com/mosra/corrade.git (git@github.com:mosra/corrade.git)
 cd corrade && mkdir build && cmake .. && make && (sudo) make install
+```
+*Eigen* installation:
+```sh
+git clone https://gitlab.com/libeigen/eigen.git (git@gitlab.com:libeigen/eigen.git)
+cd eigen && mkdir build && cmake .. && (sudo) make install
 ```
 
 ### Installation
@@ -30,8 +39,8 @@ sudo pacman -S waf
 ```
 For other distros it is better to download the latest version from the official website and move the executable in the library repo
 ```sh
-wget 'https://waf.io/waf-2.0.21'
-mv waf-2.0.19waf-2.0.19 waf && mv waf /path/to/utils-lib
+wget 'https://waf.io/waf-2.0.23'
+mv waf-2.0.23 waf && mv waf /path/to/utils-lib
 cd /path/to/kernel-lib
 chmod +x waf
 ```
@@ -47,7 +56,7 @@ Install the library (optional)
 ```sh
 (sudo) waf (./waf) install
 ```
-If you want to make clean installation
+If you want to make a clean installation
 ```sh
 (sudo) waf (./waf) distclean configure build install
 ```
@@ -57,7 +66,7 @@ In order to set the desired compiler define the environment variable CXX=<g++,cl
 
 It is highly recommended to compile with AVX support
 ```sh
-waf (./waf) configure --optional-flags
+waf (./waf) configure --release
 ```
 Compile static library (default option)
 ```sh
@@ -67,8 +76,13 @@ Compile shared library
 ```sh
 waf (./waf) configure --shared
 ```
+Define a specific installation path
+```sh
+waf (./waf) configure --prefix=/path/to/install/folder
+```
 
 ### Examples
+Once the library is compiled all the examples can be found in
 ```sh
-./build/src/examples/read_file
+./build/src/examples/
 ```
