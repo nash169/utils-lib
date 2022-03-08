@@ -81,6 +81,12 @@ Define a specific installation path
 waf (./waf) configure --prefix=/path/to/install/folder
 ```
 
+### Finding the library
+In order to find and link the lib to other projects copy and paste the following file into the waf tools
+```sh
+scripts/utilslib.py
+```
+
 ### Examples
 Once the library is compiled all the examples can be found in
 ```sh
