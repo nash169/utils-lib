@@ -102,11 +102,39 @@ namespace utils_lib {
             // Generate random test point and perturbation direction
             Eigen::VectorXd x = Eigen::VectorXd::Random(_dim), v = Eigen::VectorXd::Random(_dim);
 
-            return checkGradient(f, g, x, v);
+            // Init G
+            _G.setZero(_res);
+
+            // Generate log spaced perturbation intensities
+            _t = Eigen::Matrix<Precision, Eigen::Dynamic, 1>::LinSpaced(_res, -8, 0);
+            for (size_t i = 0; i < _t.rows(); i++)
+                _t(i) = std::pow(10, _t(i));
+
+            // Calculate first order Taylor expansion
+            for (size_t i = 0; i < _t.rows(); i++)
+                _G(i) = std::abs(f(x + _t(i) * v) - f(x) - _t(i) * g(x).dot(v));
+
+            // Transform to log space
+            _t = _t.array().log();
+            _G = _G.array().log();
+
+            // Calculate mean slope for central values
+            Precision mean_slope = 0, num_points = 0;
+
+            for (size_t i = 20; i < _res - 20; i++) {
+                mean_slope = mean_slope + (_G(i + 1) - _G(i)) / (_t(i + 1) - _t(i));
+                num_points++;
+            }
+
+            mean_slope /= num_points;
+
+            std::cout << "First order Taylor expansion slope: " << mean_slope << " - It should be approximately equal to 2.0" << std::endl;
+
+            return (std::abs(mean_slope - 2.0) <= 1e-3) ? true : false;
         }
 
         template <typename Function, typename Gradient, typename Hessian>
-        bool checkHessian(const Function& f, const Gradient& g, const Hessian& h, const Eigen::VectorXd& x, const Eigen::VectorXd& v)
+        bool checkHessian(Function f, Gradient g, Hessian h, const Eigen::VectorXd& x, const Eigen::VectorXd& v)
         {
             // Init H
             _H.setZero(_res);
@@ -140,12 +168,40 @@ namespace utils_lib {
         }
 
         template <typename Function, typename Gradient, typename Hessian>
-        bool checkHessian(const Function& f, const Gradient& g, const Hessian& h)
+        bool checkHessian(Function f, Gradient g, Hessian h)
         {
             // Generate random test point and perturbation direction
             Eigen::VectorXd x = Eigen::VectorXd::Random(_dim), v = Eigen::VectorXd::Random(_dim);
 
-            return checkHessian(f, g, h, x, v);
+            // Init H
+            _H.setZero(_res);
+
+            // Generate log spaced perturbation intensities
+            _t = Eigen::Matrix<Precision, Eigen::Dynamic, 1>::LinSpaced(_res, -8, 0);
+            for (size_t i = 0; i < _t.rows(); i++)
+                _t(i) = std::pow(10, _t(i));
+
+            // Calculate second order Taylor expansion
+            for (size_t i = 0; i < _t.rows(); i++)
+                _H(i) = std::abs(f(x + _t(i) * v) - f(x) - _t(i) * g(x).dot(v) - 0.5 * std::pow(_t(i), 2) * h(x, v).dot(v));
+
+            // Transform to log space
+            _t = _t.array().log();
+            _H = _H.array().log();
+
+            // Calculate mean slope for central values
+            Precision mean_slope = 0, num_points = 0;
+
+            for (size_t i = 30; i < _res - 10; i++) {
+                mean_slope = mean_slope + (_H(i + 1) - _H(i)) / (_t(i + 1) - _t(i));
+                num_points++;
+            }
+
+            mean_slope /= num_points;
+
+            std::cout << "Second order Taylor expansion slope: " << mean_slope << " - It should be approximately equal to 3.0" << std::endl;
+
+            return (std::abs(mean_slope - 3.0) <= 1e-3) ? true : false;
         }
 
     protected:
