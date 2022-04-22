@@ -31,11 +31,21 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from io_utils import get_data
 
-data = get_data("rsc/check_derivative.csv", "gradient")
+data = get_data("rsc/check_derivative.csv", "gradient", "hessian")
 
 fig = plt.figure()
 ax = fig.add_subplot()
-ax.plot(data["gradient"][:, 0], data["gradient"][:, 1],
+ax.plot(data["gradient"][:, 0], data["gradient"][:, 1], 'k',
         data["gradient"][:, 0], 2*data["gradient"][:, 0], 'r--')
+ax.scatter(data["gradient"][20:30, 0], data["gradient"][20:30, 1])
+ax.set_title('Gradient Check')
+
+fig = plt.figure()
+ax = fig.add_subplot()
+ax.plot(data["hessian"][:, 0], data["hessian"][:, 1], 'k',
+        data["hessian"][:, 0], 3*data["hessian"][:, 0], 'r--')
+ax.scatter(data["hessian"][20:30, 0], data["hessian"][20:30, 1])
+ax.set_title('Hessian Check')
+
 
 plt.show()

@@ -22,43 +22,87 @@
     SOFTWARE.
 */
 
-#include <Eigen/Core>
-#include <iostream>
-
 #include <utils_lib/DerivativeChecker.hpp>
 #include <utils_lib/FileManager.hpp>
 
 using namespace utils_lib;
 
+// f(x)
 template <int size>
 struct Function {
-    Eigen::Matrix<double, size, size> A = Eigen::MatrixXd::Identity(size, size);
-
     double operator()(const Eigen::Matrix<double, size, 1>& x) const
     {
-        return x.transpose() * A * x;
+        return x(0) * x(0) * x(0);
     }
 };
 
+// grad f(x)
 template <int size>
 struct Gradient {
-    Eigen::Matrix<double, size, size> A = Eigen::MatrixXd::Identity(size, size);
-
     Eigen::Matrix<double, size, 1> operator()(const Eigen::Matrix<double, size, 1>& x) const
     {
-        return 2 * (A * x);
+        return 3 * x * x;
+    }
+};
+
+// Hess f(x) [v]
+template <int size>
+struct Hessian {
+    Eigen::Matrix<double, size, 1> operator()(const Eigen::Matrix<double, size, 1>& x, const Eigen::Matrix<double, size, 1>& v) const
+    {
+        return 6 * x * v;
     }
 };
 
 int main(int argc, char const* argv[])
 {
-    constexpr int dim = 3;
+    constexpr int dim = 1;
 
-    DerivativeChecker checker(dim);
+    DerivativeChecker<long double> checker(dim);
 
     if (checker.checkGradient(Function<dim>(), Gradient<dim>()))
-        std::cout << "The gradient is correct!" << std::endl;
+        std::cout << "The gradient is COORECT!" << std::endl;
+    else
+        std::cout << "The gradient is NOT correct!" << std::endl;
+
+    if (checker.checkHessian(Function<dim>(), Gradient<dim>(), Hessian<dim>()))
+        std::cout << "The hessian is COORECT!" << std::endl;
+    else
+        std::cout << "The hessian is NOT correct!" << std::endl;
 
     FileManager io_manager;
-    io_manager.setFile("rsc/check_derivative.csv").write("gradient", checker.numericalGradient());
+    io_manager.setFile("rsc/check_derivative.csv").write("gradient", checker.numericalGradient(), "hessian", checker.numericalHessian());
 }
+
+// // f(x)
+// template <int size>
+// struct Function {
+//     Eigen::Matrix<double, size, size> A = Eigen::MatrixXd::Identity(size, size);
+
+//     double operator()(const Eigen::Matrix<double, size, 1>& x) const
+//     {
+//         return x.transpose() * A * x;
+//     }
+// };
+
+// // grad f(x)
+// template <int size>
+// struct Gradient {
+//     Eigen::Matrix<double, size, size> A = Eigen::MatrixXd::Identity(size, size);
+
+//     Eigen::Matrix<double, size, 1> operator()(const Eigen::Matrix<double, size, 1>& x) const
+//     {
+//         return 2 * (A * x);
+//     }
+// };
+
+// // Hess f(x) [v]
+// template <int size>
+// struct Hessian {
+//     Eigen::Matrix<double, size, size> A = Eigen::MatrixXd::Identity(size, size);
+
+//     Eigen::Matrix<double, size, 1> operator()(const Eigen::Matrix<double, size, 1>& x, const Eigen::Matrix<double, size, 1>& v) const
+//     {
+//         return 2 * (A * v);
+//     }
+// };
