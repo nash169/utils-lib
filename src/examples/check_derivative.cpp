@@ -71,7 +71,7 @@ int main(int argc, char const* argv[])
         std::cout << "The hessian is NOT correct!" << std::endl;
 
     FileManager io_manager;
-    io_manager.setFile("rsc/check_derivative.csv").write("gradient", checker.numericalGradient(), "hessian", checker.numericalHessian());
+    io_manager.setFile("outputs/check_derivative.csv").write("gradient", checker.numericalGradient(), "hessian", checker.numericalHessian());
 }
 
 // // f(x)

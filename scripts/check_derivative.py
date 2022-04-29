@@ -31,7 +31,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from io_utils import get_data
 
-data = get_data("rsc/check_derivative.csv", "gradient", "hessian")
+data = get_data("outputs/check_derivative.csv", "gradient", "hessian")
 
 fig = plt.figure()
 ax = fig.add_subplot()

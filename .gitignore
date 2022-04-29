@@ -44,3 +44,4 @@ __pycache__
 waf
 .cache
 waf_configure
+outputs/

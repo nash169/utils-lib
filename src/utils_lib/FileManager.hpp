@@ -25,32 +25,54 @@
 #ifndef UTILSLIB_FILEMANAGER_HPP
 #define UTILSLIB_FILEMANAGER_HPP
 
-#include <Corrade/Utility/Directory.h>
-#include <Eigen/Core>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
 
-using namespace Corrade::Utility::Directory;
+#include <Corrade/Containers/Pair.h>
+#include <Corrade/Containers/StringStl.h>
+#include <Corrade/Containers/StringView.h>
+#include <Corrade/Utility/Path.h>
+
+#include <Eigen/Core>
+
+using namespace Corrade::Utility::Path;
 
 namespace utils_lib {
     class FileManager {
     public:
         // Contructor
-        FileManager(const std::string& file);
-        FileManager();
+        FileManager(const std::string& file)
+        {
+            setFile(file);
+        }
 
-        // Destroyer
-        ~FileManager();
+        FileManager() = default;
 
         // Get file & path
-        std::string fileName() const;
-        std::string filePath() const;
+        std::string fileName() const { return _name; }
+        std::string filePath() const { return _path; }
 
         // Set file & path
-        FileManager& setFile(const std::string& file);
+        FileManager& setFile(const std::string& file)
+        {
+            auto file_path = split(file);
+
+            _path = file_path.first();
+
+            if (!_path.empty()) {
+                if (!isDirectory(_path))
+                    make(_path);
+            }
+
+            _name = file_path.second();
+
+            _open = false;
+
+            return *this;
+        }
 
         // Write file
         template <typename VarType>
@@ -187,6 +209,7 @@ namespace utils_lib {
     protected:
         bool _open;
         std::fstream _file;
+        // Corrade::Containers::StringView _path, _name;
         std::string _path, _name;
     };
 } // namespace utils_lib
