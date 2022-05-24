@@ -47,7 +47,7 @@ def check_utilslib(ctx):
 
     # utilslib-lib includes
     check_include(ctx, "UTILSLIB", [""], [
-                  "utils_lib/Utils.hpp"], path_check)
+                  "utils_lib/FileManager.hpp"], path_check)
 
     # utilslib-lib libs
     check_lib(ctx, "UTILSLIB", "", ["libUtils"], path_check)
