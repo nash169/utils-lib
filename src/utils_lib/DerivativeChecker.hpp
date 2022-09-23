@@ -32,7 +32,7 @@ namespace utils_lib {
     template <typename Precision = double>
     class DerivativeChecker {
     public:
-        DerivativeChecker(const size_t& dim = 1, const size_t& res = 51) : _dim(dim), _res(res) {}
+        DerivativeChecker(const size_t& in = 1, const size_t& out = 1, const size_t& res = 51) : _in(in), _out(out), _res(res) {}
 
         DerivativeChecker& setResolution(const size_t& res)
         {
@@ -40,9 +40,15 @@ namespace utils_lib {
             return *this;
         }
 
-        DerivativeChecker& setDimension(const size_t& dim)
+        DerivativeChecker& setInputDimension(const size_t& dim)
         {
-            _dim = dim;
+            _in = dim;
+            return *this;
+        }
+
+        DerivativeChecker& setOutputDimension(const size_t& dim)
+        {
+            _out = dim;
             return *this;
         }
 
@@ -60,6 +66,80 @@ namespace utils_lib {
             M << _t, _H;
 
             return M;
+        }
+
+        template <typename Function, typename Gradient>
+        bool checkGradientMulti(Function f, Gradient g)
+        {
+            // Generate random test point and perturbation direction
+            Eigen::VectorXd x = Eigen::VectorXd::Random(_in), v = Eigen::VectorXd::Random(_in);
+
+            // Init G
+            Eigen::MatrixXd G(_out, _res);
+
+            // Generate log spaced perturbation intensities
+            _t = Eigen::Matrix<Precision, Eigen::Dynamic, 1>::LinSpaced(_res, -8, 0);
+            for (size_t i = 0; i < _t.rows(); i++)
+                _t(i) = std::pow(10, _t(i));
+
+            // Calculate first order Taylor expansion
+            for (size_t i = 0; i < _t.rows(); i++)
+                G.col(i) = f(x + _t(i) * v) - f(x) - _t(i) * g(x) * v;
+
+            // Transform to log space
+            _t = _t.array().log();
+            G = G.array().abs().log();
+
+            // Calculate mean slope for central values
+            Precision mean_slope = 0, num_points = 0;
+
+            for (size_t i = 20; i < _res - 20; i++) {
+                mean_slope = mean_slope + (G.col(i + 1) - G.col(i)).mean() / (_t(i + 1) - _t(i));
+                num_points++;
+            }
+
+            mean_slope /= num_points;
+
+            std::cout << "First order Taylor expansion slope: " << mean_slope << " - It should be approximately equal to 2.0" << std::endl;
+
+            return (std::abs(mean_slope - 2.0) <= 1e-3) ? true : false;
+        }
+
+        template <typename Function, typename Gradient, typename Hessian>
+        bool checkHessianMulti(Function f, Gradient g, Hessian h)
+        {
+            // Generate random test point and perturbation direction
+            Eigen::VectorXd x = Eigen::VectorXd::Random(_in), v = Eigen::VectorXd::Random(_in);
+
+            // Init H
+            Eigen::MatrixXd H(_out, _res);
+
+            // Generate log spaced perturbation intensities
+            _t = Eigen::Matrix<Precision, Eigen::Dynamic, 1>::LinSpaced(_res, -8, 0);
+            for (size_t i = 0; i < _t.rows(); i++)
+                _t(i) = std::pow(10, _t(i));
+
+            // Calculate second order Taylor expansion
+            for (size_t i = 0; i < _t.rows(); i++)
+                H.col(i) = f(x + _t(i) * v) - f(x) - _t(i) * g(x) * v - 0.5 * std::pow(_t(i), 2) * h(x, v) * v;
+
+            // Transform to log space
+            _t = _t.array().log();
+            H = H.array().abs().log();
+
+            // Calculate mean slope for central values
+            Precision mean_slope = 0, num_points = 0;
+
+            for (size_t i = 30; i < _res - 10; i++) {
+                mean_slope = mean_slope + (H.col(i + 1) - H.col(i)).mean() / (_t(i + 1) - _t(i));
+                num_points++;
+            }
+
+            mean_slope /= num_points;
+
+            std::cout << "Second order Taylor expansion slope: " << mean_slope << " - It should be approximately equal to 3.0" << std::endl;
+
+            return (std::abs(mean_slope - 3.0) <= 1e-3) ? true : false;
         }
 
         template <typename Function, typename Gradient>
@@ -100,7 +180,7 @@ namespace utils_lib {
         bool checkGradient(Function f, Gradient g)
         {
             // Generate random test point and perturbation direction
-            Eigen::VectorXd x = Eigen::VectorXd::Random(_dim), v = Eigen::VectorXd::Random(_dim);
+            Eigen::VectorXd x = Eigen::VectorXd::Random(_in), v = Eigen::VectorXd::Random(_in);
 
             // Init G
             _G.setZero(_res);
@@ -171,7 +251,7 @@ namespace utils_lib {
         bool checkHessian(Function f, Gradient g, Hessian h)
         {
             // Generate random test point and perturbation direction
-            Eigen::VectorXd x = Eigen::VectorXd::Random(_dim), v = Eigen::VectorXd::Random(_dim);
+            Eigen::VectorXd x = Eigen::VectorXd::Random(_in), v = Eigen::VectorXd::Random(_in);
 
             // Init H
             _H.setZero(_res);
@@ -205,7 +285,7 @@ namespace utils_lib {
         }
 
     protected:
-        size_t _dim, _res;
+        size_t _in, _out, _res;
 
         Eigen::Matrix<Precision, Eigen::Dynamic, 1> _t, _G, _H;
     };
