@@ -61,12 +61,12 @@ int main(int argc, char const* argv[])
     DerivativeChecker<long double> checker(dim);
 
     if (checker.checkGradient(Function<dim>(), Gradient<dim>()))
-        std::cout << "The gradient is COORECT!" << std::endl;
+        std::cout << "The gradient is CORRECT!" << std::endl;
     else
         std::cout << "The gradient is NOT correct!" << std::endl;
 
     if (checker.checkHessian(Function<dim>(), Gradient<dim>(), Hessian<dim>()))
-        std::cout << "The hessian is COORECT!" << std::endl;
+        std::cout << "The hessian is CORRECT!" << std::endl;
     else
         std::cout << "The hessian is NOT correct!" << std::endl;
 
