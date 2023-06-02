@@ -1,19 +1,37 @@
 # Utils Library
 Repository containing some utility frequently used inside different libraries.
 
-### Authors/Maintainers
+## Authors/Maintainers
 - Bernardo Fichera (bernardo.fichera@epfl.ch)
 
-### Available Utils
+## Available Utils
 - File Manager
 - Timer
 - Realtime checker
 - Derivative checker
 
-### ToDo
-- add memory allocation monitoring (https://en.cppreference.com/w/cpp/types/alignment_of)
+## Usage
+**utils-lib** is header only library. In order to use it just include the header relative to the utils you intend to use in your project.
 
-### Dependencies
+### File Manager
+
+### Eigen Alias
+
+### Check Derivatives
+$E(t) = | f(tv) - f(x) - t <\text{grad} f(x), v> | = O(t^2)$ 
+
+$\log E(t) \approx 2 \log t + \text{constant}$
+
+<p align="center">
+  <img width="40%" src="https://bernardofichera.com/images/check_gradient.png">
+  <img width="40%" src="https://bernardofichera.com/images/check_hessian.png">
+</p>                                                                     
+
+## ToDo
+- add memory allocation monitoring (https://en.cppreference.com/w/cpp/types/alignment_of)
+- introduce retraction based taylor expansion to check derivative on manifolds
+
+## Dependencies
 This library depends on **Eigen** linear algebra library to load data into *Eigen* vectors/matrices. For various utilities the library depends on **Corrade** utility library.
 
 *Corrade* installation:
@@ -27,23 +45,9 @@ git clone https://gitlab.com/libeigen/eigen.git (git@gitlab.com:libeigen/eigen.g
 cd eigen && mkdir build && cmake .. && (sudo) make install
 ```
 
+In addition, in order to compile the project, install my [waf-tools](https://github.com/nash169/waf-tools.git).
+
 ### Installation
-Clone the repository including the submodules
-```sh
-git clone --recursive https://github.com/nash169/utils-lib.git (git@github.com:nash169/utils-lib.git)
-```
-**utils-lib** relies on WAF compilation tool.
-Arch provides an updated version of WAF exec in the standard repo
-```sh
-sudo pacman -S waf
-```
-For other distros it is better to download the latest version from the official website and move the executable in the library repo
-```sh
-wget 'https://waf.io/waf-2.0.23'
-mv waf-2.0.23 waf && mv waf /path/to/utils-lib
-cd /path/to/kernel-lib
-chmod +x waf
-```
 Compile and install using waf commands
 ```sh
 waf (./waf) configure build
@@ -64,9 +68,9 @@ If you want to make a clean installation
 #### Compilation options
 In order to set the desired compiler define the environment variable CXX=<g++,clang++,icpc> (gnu, clang and intel compiler respectively).
 
-It is highly recommended to compile with AVX support
+AVX support with optimization flags is active by default. If you want disable this run the configure with `debug` flag:
 ```sh
-waf (./waf) configure --release
+waf (./waf) configure --debug
 ```
 Compile static library (default option)
 ```sh
@@ -81,11 +85,6 @@ Define a specific installation path
 waf (./waf) configure --prefix=/path/to/install/folder
 ```
 
-### Finding the library
-In order to find and link the lib to other projects copy and paste the following file into the waf tools
-```sh
-scripts/utilslib.py
-```
 
 ### Examples
 Once the library is compiled all the examples can be found in
