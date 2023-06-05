@@ -22,24 +22,33 @@
     SOFTWARE.
 */
 
-#include <Eigen/Core>
 #include <utils_lib/RealtimeChecker.hpp>
 
-// Source: https://github.com/stulp/tutorials/blob/master/test.md
+#include <Eigen/Core>
+
+// Source: https://github.com/stulp/eigenrealtime/tree/master
 
 int main(int argc, char const* argv[])
 {
-    Eigen::MatrixXd a = Eigen::MatrixXd::Random(5, 5), b = Eigen::MatrixXd::Random(5, 5), c = Eigen::MatrixXd::Random(5, 5), prealloc;
+    Eigen::MatrixXd a = Eigen::MatrixXd::Random(5, 5), b = Eigen::MatrixXd::Random(5, 5), c = Eigen::MatrixXd::Random(5, 5), prealloc(5, 5);
 
     ENTERING_REAL_TIME_CRITICAL_CODE
+    // no memory allocation even without noalias
     b += c;
 
-    // a.noalias() += b * c;
+    // no memory allocation
+    a.noalias() += b * c;
+
+    // memory allocation (code crashes)
     a += b * c;
 
-    prealloc.noalias() = b * c;
+    // memory allocation and not possible to noalias (code crashes)
+    c += b * c;
 
+    // using pre-allocation to avoid allocating in real time application
+    prealloc.noalias() = b * c;
     c = prealloc;
+
     EXITING_REAL_TIME_CRITICAL_CODE
 
     return 0;
