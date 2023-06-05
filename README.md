@@ -7,7 +7,7 @@ Repository containing some utility frequently used inside different libraries.
 ## Available Utils
 - File Manager
 - Timer
-- Realtime checker
+- Eigen Memory Allocation checker
 - Derivative checker
 
 ## Usage
@@ -15,16 +15,76 @@ Repository containing some utility frequently used inside different libraries.
 
 ### File Manager
 
-### Eigen Alias
+### Timer
+
+### Eigen Memory Allocation Check
+In scenarios where we want to run application in real-time maintaining consistent frequency, runtime memory allocation is an important aspect. This is an utility based on Eigen Linear Algebra Library. It is inspired from [this](https://github.com/stulp/eigenrealtime) repo. Whenever you need to check if eigen is allocating memory at runtime include the utility header **before** including `Eigen`.
+
+```c++
+#include <utils_lib/RealtimeChecker.hpp>
+#include <Eigen/Core>
+```
+
+Place the code where you want to avoid runtime memory allocation in between the macros `ENTERING_REAL_TIME_CRITICAL_CODE` and `EXITING_REAL_TIME_CRITICAL_CODE`. For instance
+
+```c++
+Eigen::MatrixXd a = Eigen::MatrixXd::Random(5, 5), b = Eigen::MatrixXd::Random(5, 5), c = Eigen::MatrixXd::Random(5, 5);
+
+ENTERING_REAL_TIME_CRITICAL_CODE
+
+// no memory allocation
+a.noalias() += b * c;
+
+
+// memory allocation
+a += b * c;
+
+EXITING_REAL_TIME_CRITICAL_CODE
+```
+The code will go through the first operation while it will crash in the second one where memory allocations happens. Check the example `eigen_malloc.cpp` to find more.
 
 ### Check Derivatives
-$E(t) = | f(tv) - f(x) - t <\text{grad} f(x), v> | = O(t^2)$ 
+This utility helps in numerically checking derivatives (up to second order). In order to check the gradient, the algorithm simply check that the taylor expansion up to the first derivative 
+$$E(t) = | f(tv) - f(x) - t <\text{grad} f(x), v> | = O(t^2)$$
+has a slope of approximately $2$ 
+$$\log E(t) \approx 2 \log t + \text{constant}.$$
+For the hessian check the taylor expansion up to the second derivative
+$$E(t) = | f(tv) - f(x) - t <\text{grad} f(x), v> -\frac{t^2}{2} <\text{Hess} f(x)[v], v >| = O(t^3)$$
+should approximately have a slope of $3$
+$$\log E(t) \approx 3 \log t + \text{constant}.$$
 
-$\log E(t) \approx 2 \log t + \text{constant}$
+First define your function and the derivative of it.
+```c++
+template <int size>
+struct Function {
+    double operator()(const Eigen::Matrix<double, size, 1>& x) const
+    {
+        return x(0) * x(0) * x(0);
+    }
+};
+
+// grad f(x)
+template <int size>
+struct Gradient {
+    Eigen::Matrix<double, size, 1> operator()(const Eigen::Matrix<double, size, 1>& x) const
+    {
+        return 3 * x * x;
+    }
+};
+```
+The utility is fully templated; you have the freedom to define you functions as structures with overloaded `()` operators, as shown above, lambda functions, `std::functions` wrapper or raw pointers. Define an instance of the utility (specifying the problem dimension) and then call the `checkGradient` method.
+```c++
+constexpr int dim = 1;
+DerivativeChecker<long double> checker(dim);
+
+bool grad_is_correct = checker.checkGradient(Function<dim>(), Gradient<dim>());
+```
+Check the example `check_derivative.cpp` to find more.
+
 
 <p align="center">
-  <img width="40%" src="https://bernardofichera.com/images/check_gradient.png">
-  <img width="40%" src="https://bernardofichera.com/images/check_hessian.png">
+  <img width="40%" src="media/check_gradient.png">
+  <img width="40%" src="media/check_hessian.png">
 </p>                                                                     
 
 ## ToDo
@@ -85,9 +145,8 @@ Define a specific installation path
 waf (./waf) configure --prefix=/path/to/install/folder
 ```
 
-
 ### Examples
-Once the library is compiled all the examples can be found in
+Once the library is compiled all the examples can be run with
 ```sh
-./build/src/examples/
+./build/src/examples/<name_example>
 ```
