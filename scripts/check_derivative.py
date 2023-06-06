@@ -25,7 +25,7 @@
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from io_utils import get_data
+from read_file import get_data
 
 # Load data
 data = get_data("outputs/check_derivative.csv", "gradient", "hessian")

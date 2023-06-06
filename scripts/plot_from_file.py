@@ -23,18 +23,16 @@
 #    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #    SOFTWARE.
 
-import numpy as np
 import matplotlib.pyplot as plt
-import sys
+from scripts.read_file import get_data
 
-from matplotlib import cm
-from io_utils import get_data
-
-data = get_data(sys.argv[1], "X", "Y")
+sigmoid = get_data("outputs/sigmoid_fun.csv", "X", "Y")
+gaussian = get_data("outputs/gaussian_fun.csv", "X", "Y")
 
 fig = plt.figure()
-ax = fig.add_subplot(111)
-ax.plot(data["X"], data["Y"])
+ax = fig.add_subplot(121)
+ax.plot(sigmoid["X"], sigmoid["Y"])
+ax = fig.add_subplot(122)
+ax.plot(gaussian["X"], gaussian["Y"])
 
-
-plt.show()
+fig.savefig("outputs/plot_from_file.png", format="png", dpi=300, bbox_inches="tight")

@@ -14,8 +14,51 @@ Repository containing some utility frequently used inside different libraries.
 **utils-lib** is header only library. In order to use it just include the header relative to the utils you intend to use in your project.
 
 ### File Manager
+In order to read/write from/to a given file create and instance of the `FileManager` object and set the path to the file you want to operate on
+```c++
+utils_lib::FileManager file_manager;
+file_manager.setFile("path/to/file");
+```
+In case you want to write on the file, if either the file or the folder(s) in the path do not exist they will be automatically created. To write on the file call the `write` passing the elements you want to write. The utility uses variadic template techniques in order to allow to write onto a file an arbitrary number of elements in sequence. For instance
+```c++
+constexpr int dim = 100;
+Eigen::VectorXd x = Eigen::VectorXd::Random(dim), y = Eigen::VectorXd::Random(dim);
+file_manager.write("x", x, "y", y);
+```
+The above snippet shows how to write the vectors $x$ and $y$ preceded by their respective labels. The algorithm will write down on the file the label followed by a space and then the vector passed. To append to a file
+```c++
+file_manager.append("x", x, "y", y)
+```
+In order to read from file you can just call the `read` method specializing the template to the type of object you want to read. In addition you can specify and specific string present in the file from which starting to read as well as an end string where to stop reading. If no end key is specifying the algorithm will stop reading at the first blank line encountered. Sometime after you want to ignore reading a bunch of lines; set the second argument in the `read` method to achieve that (`read<object_type>(key_start, num_lines_to_ignore, key_end)`). The utility supports methods chaining technique. So in case you want to read from a new file you can set it and read from it in one line.
+```c++
+Eigen::VectorXd x, y;
+x = file_manager.setFile("path/to/new/file").read<Eigen::MatrixXd>("x", 2);
+y = file_manager.setFile("path/to/new/file").read<Eigen::MatrixXd>("y", 2);
+```
+When you specify a key start you want to ignore this line itself and the space after it; therefore the number $2$ set ad number of lines to ignore. Check the example `read_write.cpp` to find out more.
+
 
 ### Timer
+The timer utility measures the time in between the creation and the destruction of the `Timer` object. Place the piece of code you want to benchmark within the same scope of the `Timer` object. For instance
+```c++
+constexpr int dim = 100;
+
+    Eigen::Matrix<double, dim, dim> A = Eigen::Matrix<double, dim, dim>::Random();
+    Eigen::Matrix<double, dim, 1> x = Eigen::Matrix<double, dim, 1>::Random(), b = Eigen::Matrix<double, dim, 1>::Zero();
+
+    {
+        utils_lib::Timer timer;
+        for (size_t i = 0; i < dim; i++)
+            for (size_t j = 0; j < dim; j++)
+                b(i) += A(i, j) * x(j);
+    }
+
+    {
+        utils_lib::Timer timer;
+        b = A * x;
+    }
+```
+As soon as `Timer` goes out of scope it will print the duration in time (in us, ms and s). Check the example `time_benchmark.cpp` to find out more.
 
 ### Eigen Memory Allocation Check
 In scenarios where we want to run application in real-time maintaining consistent frequency, runtime memory allocation is an important aspect. This is an utility based on Eigen Linear Algebra Library. It is inspired from [this](https://github.com/stulp/eigenrealtime) repo. Whenever you need to check if eigen is allocating memory at runtime include the utility header **before** including `Eigen`.
@@ -41,7 +84,7 @@ a += b * c;
 
 EXITING_REAL_TIME_CRITICAL_CODE
 ```
-The code will go through the first operation while it will crash in the second one where memory allocations happens. Check the example `eigen_malloc.cpp` to find more.
+The code will go through the first operation while it will crash in the second one where memory allocations happens. Check the example `eigen_malloc.cpp` to find out more.
 
 ### Check Derivatives
 This utility helps in numerically checking derivatives (up to second order). In order to check the gradient, the algorithm simply check that the taylor expansion up to the first derivative 
@@ -72,14 +115,14 @@ struct Gradient {
     }
 };
 ```
-The utility is fully templated; you have the freedom to define you functions as structures with overloaded `()` operators, as shown above, lambda functions, `std::functions` wrapper or raw pointers. Define an instance of the utility (specifying the problem dimension) and then call the `checkGradient` method.
+The utility is fully templated; you have the freedom to define your functions as structures with overloaded `()` operators, as shown above, lambda functions, `std::functions` wrapper or raw pointers. Define an instance of the utility (specifying the problem dimension) and then call the `checkGradient` method.
 ```c++
 constexpr int dim = 1;
-DerivativeChecker<long double> checker(dim);
+utils_lib::DerivativeChecker<long double> checker(dim);
 
 bool grad_is_correct = checker.checkGradient(Function<dim>(), Gradient<dim>());
 ```
-Check the example `check_derivative.cpp` to find more.
+Check the example `check_derivative.cpp` to find out more.
 
 
 <p align="center">

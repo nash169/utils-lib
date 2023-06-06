@@ -52,11 +52,11 @@ int main(int argc, char const* argv[])
 {
     FileManager io_manager;
 
-    Eigen::MatrixXd X = io_manager.setFile("rsc/sphere_mesh.mesh").read<Eigen::MatrixXd>("elements", 2),
-                    Y = io_manager.setFile("rsc/joints_icub.csv").read<Eigen::MatrixXd>(),
-                    Z = io_manager.setFile("rsc/sphere.msh").read<Eigen::MatrixXd>("$Nodes", 2, "$EndNodes");
+    Eigen::MatrixXd X = io_manager.setFile("rsc/matrix_start_key.mesh").read<Eigen::MatrixXd>("elements", 2),
+                    Y = io_manager.setFile("rsc/matrix_no_key.csv").read<Eigen::MatrixXd>(),
+                    Z = io_manager.setFile("rsc/matrix_startend_key.msh").read<Eigen::MatrixXd>("$Nodes", 2, "$EndNodes");
 
-    Eigen::VectorXd v = io_manager.setFile("rsc/sphere_mode_01").read<Eigen::MatrixXd>();
+    Eigen::VectorXd v = io_manager.setFile("rsc/vector_no_key").read<Eigen::MatrixXd>();
 
     std::cout << "First file begin" << std::endl;
     std::cout << X.block(0, 0, 5, 5) << std::endl;
@@ -78,16 +78,22 @@ int main(int argc, char const* argv[])
     std::cout << "Fourth file end" << std::endl;
     std::cout << v.segment(v.rows() - 5, 5) << std::endl;
 
-    // Sigmoid f, g;
-    Gaussian f;
+    // write to file
+    Sigmoid sigmoid;
+    Gaussian gaussian;
 
     size_t res = 200;
     Eigen::VectorXd x = Eigen::VectorXd::LinSpaced(res, -50, 50), y(res);
 
     for (size_t i = 0; i < res; i++)
-        y(i) = f(x(i));
+        y(i) = sigmoid(x(i));
 
-    io_manager.setFile("outputs/write_file.csv").write("X", x, "Y", y);
+    io_manager.setFile("outputs/sigmoid_fun.csv").write("X", x, "Y", y);
+
+    for (size_t i = 0; i < res; i++)
+        y(i) = gaussian(x(i));
+
+    io_manager.setFile("outputs/gaussian_fun.csv").write("X", x, "Y", y);
 
     return 0;
 }
