@@ -10,6 +10,10 @@ Repository containing some utility frequently used inside different libraries.
 - Eigen Memory Allocation checker
 - Derivative checker
 
+## ToDo
+- add memory allocation monitoring (https://en.cppreference.com/w/cpp/types/alignment_of)
+- introduce retraction based taylor expansion to check derivative on manifolds
+
 ## Usage
 **utils-lib** is header only library. In order to use it just include the header relative to the utils you intend to use in your project.
 
@@ -130,10 +134,6 @@ Check the example `check_derivative.cpp` to find out more.
   <img width="40%" src="media/check_hessian.png">
 </p>                                                                     
 
-## ToDo
-- add memory allocation monitoring (https://en.cppreference.com/w/cpp/types/alignment_of)
-- introduce retraction based taylor expansion to check derivative on manifolds
-
 ## Dependencies
 This library depends on **Eigen** linear algebra library to load data into *Eigen* vectors/matrices. For various utilities the library depends on **Corrade** utility library.
 
@@ -150,45 +150,45 @@ cd eigen && mkdir build && cmake .. && (sudo) make install
 
 In addition, in order to compile the project, install my [waf-tools](https://github.com/nash169/waf-tools.git).
 
-### Installation
+## Installation
 Compile and install using waf commands
 ```sh
-waf (./waf) configure build
+waf configure build
 ```
 or
 ```sh
-waf (./waf) configure && waf (./waf)
+waf configure && waf
 ```
 Install the library (optional)
 ```sh
-(sudo) waf (./waf) install
+(sudo) waf install
 ```
 If you want to make a clean installation
 ```sh
-(sudo) waf (./waf) distclean configure build install
+(sudo) waf distclean configure build install
 ```
 
-#### Compilation options
+### Compilation options
 In order to set the desired compiler define the environment variable CXX=<g++,clang++,icpc> (gnu, clang and intel compiler respectively).
 
 AVX support with optimization flags is active by default. If you want disable this run the configure with `debug` flag:
 ```sh
-waf (./waf) configure --debug
+waf configure --debug
 ```
 Compile static library (default option)
 ```sh
-waf (./waf) configure --static
+waf configure --static
 ```
 Compile shared library
 ```sh
-waf (./waf) configure --shared
+waf configure --shared
 ```
 Define a specific installation path
 ```sh
-waf (./waf) configure --prefix=/path/to/install/folder
+waf configure --prefix=/path/to/install/folder
 ```
 
-### Examples
+## Examples
 Once the library is compiled all the examples can be run with
 ```sh
 ./build/src/examples/<name_example>
